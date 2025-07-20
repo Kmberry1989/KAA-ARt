@@ -1,0 +1,84 @@
+'use server';
+/**
+ * @fileOverview Flow for converting an image to a 3D plane for AR display.
+ *
+ * - createImageToPlane - A function that handles the image to plane conversion process.
+ * - ImageToPlaneInput - The input type for the createImageToPlane function.
+ * - ImageToPlaneOutput - The return type for the createImageToPlane function.
+ */
+
+import { ai } from '@/ai/genkit';
+import { z } from 'genkit';
+
+export const ImageToPlaneInputSchema = z.object({
+  title: z.string().describe('The title of the artwork.'),
+  artist: z.string().describe('The name of the artist.'),
+  description: z.string().describe('A short, engaging description of the artwork.'),
+  dimensions: z.object({
+      width: z.number().describe('The width of the artwork in meters.'),
+      height: z.number().describe('The height of the artwork in meters.'),
+    }).describe('The real-world dimensions of the artwork.'),
+  imageDataUri: z
+    .string()
+    .describe(
+      "A photo of the artwork, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
+});
+export type ImageToPlaneInput = z.infer<typeof ImageToPlaneInputSchema>;
+
+export const ImageToPlaneOutputSchema = z.object({
+  id: z.string().describe('A unique ID for the new artwork.'),
+  title: z.string().describe('The title of the artwork.'),
+  artist: z.string().describe('The name of the artist.'),
+  description: z.string().describe('The description of the artwork.'),
+  imageUrl: z.string().describe('The URL of the image (the provided data URI).'),
+  type: z.literal('plane').describe("The type of artwork, always 'plane'."),
+  dimensions: z.object({
+    width: z.number(),
+    height: z.number(),
+  }),
+});
+export type ImageToPlaneOutput = z.infer<typeof ImageToPlaneOutputSchema>;
+
+export async function createImageToPlane(input: ImageToPlaneInput): Promise<ImageToPlaneOutput> {
+  return imageToPlaneFlow(input);
+}
+
+const prompt = ai.definePrompt({
+    name: 'createImageToPlanePrompt',
+    input: { schema: ImageToPlaneInputSchema },
+    output: { schema: ImageToPlaneOutputSchema },
+    prompt: `You are an AI assistant creating a new piece of digital art for an AR gallery.
+The user has provided an image and details. Your task is to process this information and format it as a new artwork object.
+Generate a unique ID for this artwork. The current timestamp as a string is a good unique ID.
+The 'type' must be 'plane'.
+The 'imageUrl' should be the 'imageDataUri' provided by the user.
+The 'description' should be a refined, slightly more descriptive version of the user's input, making it sound more like an art gallery description.
+
+User Input:
+Title: {{title}}
+Artist: {{artist}}
+Description: {{description}}
+Dimensions: {{dimensions.width}}m x {{dimensions.height}}m
+Image: {{media url=imageDataUri}}
+
+Return the full artwork object in the specified JSON format.
+`,
+});
+
+
+const imageToPlaneFlow = ai.defineFlow(
+  {
+    name: 'imageToPlaneFlow',
+    inputSchema: ImageToPlaneInputSchema,
+    outputSchema: ImageToPlaneOutputSchema,
+  },
+  async (input) => {
+    const { output } = await prompt(input);
+    
+    // We can't actually save it to a database in this environment,
+    // so we return the created object.
+    // The image URL will be the data URI, which is fine for displaying on the client.
+    return output!;
+  }
+);
