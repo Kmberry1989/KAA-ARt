@@ -1,6 +1,7 @@
 import type { Artwork } from './types';
+import { ArtStore } from './art-store';
 
-export const artworks: Artwork[] = [
+export const initialArtworks: Artwork[] = [
   {
     id: '1',
     title: 'Bronze Voyager',
@@ -53,6 +54,17 @@ export const artworks: Artwork[] = [
   },
 ];
 
+export const artworkStore = new ArtStore(initialArtworks);
+
+export const getArtworks = (): Artwork[] => {
+  return artworkStore.getAll();
+};
+
+
 export const getArtworkById = (id: string): Artwork | undefined => {
-  return artworks.find((art) => art.id === id);
+  return artworkStore.getById(id);
+};
+
+export const addArtwork = (artwork: Artwork) => {
+  artworkStore.add(artwork);
 };

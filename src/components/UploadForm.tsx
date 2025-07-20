@@ -18,6 +18,7 @@ import { Move3d, ImageIcon, Loader2, CheckCircle, ArrowRight } from "lucide-reac
 import type { ImageToPlaneOutput } from "@/ai/flows/image-to-plane";
 import Link from "next/link";
 import Image from "next/image";
+import { Label } from "./ui/label";
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
@@ -238,9 +239,22 @@ export default function UploadForm() {
                             </div>
                             <h3 className="text-lg font-semibold">{result.title}</h3>
                             <p className="text-sm text-muted-foreground">by {result.artist}</p>
-                            <Button asChild className="w-full" onClick={() => router.push(`/`)}>
+                            <Button asChild className="w-full" onClick={() => {
+                                setShowSuccessDialog(false);
+                                router.push(`/art/${result.id}`);
+                            }}>
+                                <Link href={`/art/${result.id}`}>
+                                    View Artwork <ArrowRight className="ml-2" />
+                                </Link>
+                            </Button>
+                            <Button asChild variant="outline" className="w-full" onClick={() => {
+                                setShowSuccessDialog(false);
+                                router.push('/');
+                                // We call router.refresh() to ensure the page reloads and shows the new artwork.
+                                router.refresh();
+                            }}>
                                 <Link href="/">
-                                    Back to Gallery <ArrowRight className="ml-2" />
+                                    Back to Gallery
                                 </Link>
                             </Button>
                         </div>

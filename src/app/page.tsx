@@ -1,7 +1,8 @@
-import { artworks } from "@/lib/data";
+import { getArtworks } from "@/lib/data";
 import ArtCard from "@/components/ArtCard";
 
 export default function Home() {
+  const artworks = getArtworks();
   return (
     <div className="space-y-8">
       <header className="text-center space-y-2">

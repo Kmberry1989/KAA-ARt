@@ -75,10 +75,12 @@ const imageToPlaneFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await prompt(input);
+
+    if (!output) {
+      throw new Error("AI failed to generate artwork data.");
+    }
     
-    // We can't actually save it to a database in this environment,
-    // so we return the created object.
     // The image URL will be the data URI, which is fine for displaying on the client.
-    return output!;
+    return output;
   }
 );
