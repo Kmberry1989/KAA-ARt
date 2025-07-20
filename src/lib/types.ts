@@ -12,6 +12,7 @@ export type Artwork = {
     height: number;
     depth?: number;
   };
+  createdAt: string;
 };
 
 export type Message = {
