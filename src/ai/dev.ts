@@ -1,1 +1,5 @@
-// Flows will be imported for their side effects in this file.
+import { config } from 'dotenv';
+config();
+
+import '@/ai/flows/art-info-query.ts';
+import '@/ai/flows/contextual-art-display.ts';
