@@ -4,25 +4,16 @@
  * @fileOverview An AI agent that answers questions about a displayed artwork.
  *
  * - artInfoQuery - A function that handles the art information query process.
- * - ArtInfoQueryInput - The input type for the artInfoQuery function.
- * - ArtInfoQueryOutput - The return type for the artInfoQuery function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {
+    ArtInfoQueryInputSchema,
+    ArtInfoQueryOutputSchema,
+    type ArtInfoQueryInput,
+    type ArtInfoQueryOutput
+} from '@/lib/types';
 
-const ArtInfoQueryInputSchema = z.object({
-  artworkDescription: z
-    .string()
-    .describe('Description of the artwork being displayed.'),
-  userQuery: z.string().describe('The user query about the artwork.'),
-});
-export type ArtInfoQueryInput = z.infer<typeof ArtInfoQueryInputSchema>;
-
-const ArtInfoQueryOutputSchema = z.object({
-  answer: z.string().describe('The answer to the user query about the artwork.'),
-});
-export type ArtInfoQueryOutput = z.infer<typeof ArtInfoQueryOutputSchema>;
 
 export async function artInfoQuery(input: ArtInfoQueryInput): Promise<ArtInfoQueryOutput> {
   return artInfoQueryFlow(input);
