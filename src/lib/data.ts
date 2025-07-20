@@ -1,6 +1,6 @@
 import type { Artwork } from './types';
 import { db } from './firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
 const ARTWORKS_COLLECTION = 'artworks';
 
@@ -16,7 +16,7 @@ export async function seedInitialData() {
     }
 
     console.log('Seeding initial artworks...');
-    const initialArtworks: Omit<Artwork, 'id'>[] = [
+    const initialArtworks: Omit<Artwork, 'id' | 'createdAt'>[] = [
       {
         title: 'Bronze Voyager',
         artist: 'Studio Glimmer',
@@ -76,16 +76,20 @@ export async function seedInitialData() {
 
 
 export const getArtworks = async (): Promise<Artwork[]> => {
-    // Ensure data is seeded if collection is empty
     await seedInitialData();
   const snapshot = await db.collection(ARTWORKS_COLLECTION).orderBy('createdAt', 'desc').get();
   if (snapshot.empty) {
     return [];
   }
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Artwork[];
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    const createdAt = (data.createdAt as Timestamp).toDate().toISOString();
+    return {
+        id: doc.id,
+        ...data,
+        createdAt,
+    } as Artwork;
+  });
 };
 
 export const getArtworkById = async (id: string): Promise<Artwork | undefined> => {
@@ -93,15 +97,18 @@ export const getArtworkById = async (id: string): Promise<Artwork | undefined> =
   if (!doc.exists) {
     return undefined;
   }
-  return { id: doc.id, ...doc.data() } as Artwork;
+    const data = doc.data();
+    if (!data) return undefined;
+
+  const createdAt = (data.createdAt as Timestamp).toDate().toISOString();
+  return { id: doc.id, ...data, createdAt } as Artwork;
 };
 
-export const addArtwork = async (artwork: Omit<Artwork, 'id'>) => {
+export const addArtwork = async (artwork: Omit<Artwork, 'id' | 'createdAt'>) => {
   const artworksCollection = db.collection(ARTWORKS_COLLECTION);
-  // Firestore will auto-generate an ID
   const newDocRef = await artworksCollection.add({
       ...artwork,
-      createdAt: FieldValue.serverTimestamp(), // Add a timestamp for ordering
+      createdAt: FieldValue.serverTimestamp(),
   });
   return newDocRef.id;
 };
