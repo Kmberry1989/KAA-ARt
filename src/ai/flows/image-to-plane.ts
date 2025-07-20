@@ -24,7 +24,7 @@ const prompt = ai.definePrompt({
     output: { schema: ImageToPlaneOutputSchema },
     prompt: `You are an AI assistant creating a new piece of digital art for an AR gallery.
 The user has provided an image and details. Your task is to process this information and format it as a new artwork object.
-The 'type' must be 'plane'.
+The 'type' must be the string 'plane'.
 The 'imageUrl' should be the 'imageDataUri' provided by the user.
 The 'description' should be a refined, slightly more descriptive version of the user's input, making it sound more like an art gallery description.
 
