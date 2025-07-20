@@ -1,3 +1,7 @@
+// This file is no longer used and can be deleted. 
+// The data logic has been moved to src/lib/data.ts and now uses Firestore.
+// I'm leaving it here to avoid breaking any imports, but it's now obsolete.
+
 import type { Artwork } from './types';
 
 // This is a simple in-memory store for the artworks.

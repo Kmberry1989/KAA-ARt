@@ -1,8 +1,8 @@
 import { getArtworks } from "@/lib/data";
 import ArtCard from "@/components/ArtCard";
 
-export default function Home() {
-  const artworks = getArtworks();
+export default async function Home() {
+  const artworks = await getArtworks();
   return (
     <div className="space-y-8">
       <header className="text-center space-y-2">
@@ -15,6 +15,9 @@ export default function Home() {
         {artworks.map((art) => (
           <ArtCard key={art.id} artwork={art} />
         ))}
+        {artworks.length === 0 && (
+            <p className="col-span-full text-center text-muted-foreground">The gallery is currently empty. Be the first to upload some art!</p>
+        )}
       </div>
     </div>
   );

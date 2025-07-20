@@ -21,9 +21,10 @@ export async function handleImageToPlane(
     const result = await createImageToPlane(input);
 
     if (isArtwork(result)) {
-        addArtwork(result);
+        const { id, ...artworkData } = result; // Exclude AI-generated ID
+        const newId = await addArtwork(artworkData);
         revalidatePath('/'); // This clears the cache for the home page
-        return { success: true, artwork: result };
+        return { success: true, artwork: { ...artworkData, id: newId } };
     } else {
         throw new Error("AI did not return a valid artwork object.");
     }

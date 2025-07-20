@@ -4,8 +4,8 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import ArtDetailClient from "@/components/ArtDetailClient";
 
-export default function ArtPage({ params }: { params: { id: string } }) {
-  const artwork = getArtworkById(params.id);
+export default async function ArtPage({ params }: { params: { id: string } }) {
+  const artwork = await getArtworkById(params.id);
 
   if (!artwork) {
     notFound();
