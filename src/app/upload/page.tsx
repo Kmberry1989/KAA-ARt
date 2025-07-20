@@ -46,12 +46,28 @@ export default function UploadPage() {
                 <Label htmlFor="model-description">Description</Label>
                 <Textarea id="model-description" placeholder="A short, engaging description of your artwork..." />
               </div>
-              <div>
-                <Label>Real-World Dimensions (in meters)</Label>
-                <div className="grid grid-cols-3 gap-4 mt-2">
-                  <Input type="number" placeholder="Width (e.g., 0.8)" />
-                  <Input type="number" placeholder="Height (e.g., 1.5)" />
-                  <Input type="number" placeholder="Depth (e.g., 0.6)" />
+              <div className="space-y-4">
+                <Label>Real-World Dimensions</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="model-width-ft" className="text-sm font-normal">Width</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input id="model-width-ft" type="number" placeholder="Feet" />
+                    <Input id="model-width-in" type="number" placeholder="Inches" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="model-height-ft" className="text-sm font-normal">Height</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input id="model-height-ft" type="number" placeholder="Feet" />
+                    <Input id="model-height-in" type="number" placeholder="Inches" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="model-depth-ft" className="text-sm font-normal">Depth</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input id="model-depth-ft" type="number" placeholder="Feet" />
+                    <Input id="model-depth-in" type="number" placeholder="Inches" />
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
@@ -82,11 +98,21 @@ export default function UploadPage() {
                 <Label htmlFor="image-description">Description</Label>
                 <Textarea id="image-description" placeholder="A short, engaging description of your artwork..." />
               </div>
-              <div>
-                <Label>Canvas Dimensions (in meters)</Label>
-                <div className="grid grid-cols-2 gap-4 mt-2">
-                  <Input type="number" placeholder="Width (e.g., 1.2)" />
-                  <Input type="number" placeholder="Height (e.g., 0.9)" />
+              <div className="space-y-4">
+                <Label>Canvas Dimensions</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="image-width-ft" className="text-sm font-normal">Width</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input id="image-width-ft" type="number" placeholder="Feet" />
+                    <Input id="image-width-in" type="number" placeholder="Inches" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="image-height-ft" className="text-sm font-normal">Height</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input id="image-height-ft" type="number" placeholder="Feet" />
+                    <Input id="image-height-in" type="number" placeholder="Inches" />
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
