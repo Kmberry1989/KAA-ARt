@@ -77,10 +77,13 @@ export const ImageToPlaneOutputSchema = z.object({
   artist: z.string().describe('The name of the artist.'),
   description: z.string().describe('The description of the artwork.'),
   imageUrl: z.string().describe('The URL of the image (the provided data URI).'),
-  type: z.literal('plane').describe("The type of artwork, always 'plane'."),
+  type: z.string().describe("The type of artwork, which must be 'plane'."),
   dimensions: z.object({
     width: z.number(),
     height: z.number(),
   }),
+}).refine((data) => data.type === 'plane', {
+    message: "Artwork type must be 'plane'",
+    path: ["type"],
 });
 export type ImageToPlaneOutput = Omit<z.infer<typeof ImageToPlaneOutputSchema>, 'id'>;
