@@ -20,6 +20,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Label } from "./ui/label";
 
+// Zod schema for validation
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
   artist: z.string().min(2, "Artist name must be at least 2 characters."),
@@ -28,7 +29,9 @@ const formSchema = z.object({
   widthIn: z.coerce.number().min(0).max(11),
   heightFt: z.coerce.number().min(0),
   heightIn: z.coerce.number().min(0).max(11),
-  file: z.instanceof(FileList).refine((files) => files?.length === 1, "Image is required."),
+  // Use z.any() for the file to avoid FileList issue on server.
+  // We'll perform manual validation in the onSubmit handler.
+  file: z.any(),
 }).refine(data => (data.widthFt * 12 + data.widthIn) > 0, {
     message: "Total width must be greater than 0 inches.",
     path: ["widthFt"],
@@ -75,11 +78,7 @@ export default function UploadForm() {
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         if (!data.file || data.file.length === 0) {
-            toast({
-                variant: "destructive",
-                title: "No file selected",
-                description: "Please select an image file to upload.",
-            });
+            form.setError("file", { type: "manual", message: "Image is required." });
             return;
         }
 
